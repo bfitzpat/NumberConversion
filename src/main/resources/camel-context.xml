@@ -1,0 +1,61 @@
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:cxf="http://camel.apache.org/schema/cxf"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd
+        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <camelContext id="cxfrs-27a5fe8f-2d1d-4aa2-a71a-678dbdce3297" xmlns="http://camel.apache.org/schema/spring">
+
+        <dataFormats>
+            <xmljson id="xmljson"/>
+        </dataFormats>
+        
+        <restConfiguration component="jetty" host="localhost" port="8081" bindingMode="json">
+        </restConfiguration>
+
+        <rest id="id-6ca92fb7-9df1-4a91-a6ff-cc1f14987775" path="/jaxrs">
+
+          <get id="id-c0018d12-be2c-4ddb-862e-c26f43825250" uri="/numbertodollars/{arg0}" 
+            type="com/webservicesserver.dataaccess.www.NumberToDollars"
+            outType="com/webservicesserver.dataaccess.www.NumberToDollarsResponse" 
+            >
+            <to uri="direct:NumberToDollars"/>
+          </get>
+
+          <get id="id-069dba55-d35a-4845-9071-d66fa503acd1" uri="/numbertowords/{arg0}" 
+            type="com/webservicesserver.dataaccess.www.NumberToWords"
+            outType="com/webservicesserver.dataaccess.www.NumberToWordsResponse" 
+            >
+            <to uri="direct:NumberToWords"/>
+          </get>
+        </rest>
+
+        <route id="NumberToDollars">
+            <from uri="direct:NumberToDollars" />
+            <log loggingLevel="INFO" message="NumberToDollars"/>
+            <to uri="cxf://http://www.dataaccess.com/webservicesserver/numberconversion.wso?serviceClass=com/webservicesserver.dataaccess.www.NumberConversionSoapType&amp;defaultOperationName=NumberToDollars"/>
+            <setHeader headerName="Content-Type">
+               <constant>application/json</constant>
+            </setHeader>
+            <setBody>
+                <simple>${body[0]}</simple>
+            </setBody>
+        </route>
+        
+        <route id="NumberToWords">
+            <from uri="direct:NumberToWords" />
+            <log loggingLevel="INFO" message="NumberToWords"/>
+            <to uri="cxf://http://www.dataaccess.com/webservicesserver/numberconversion.wso?serviceClass=com/webservicesserver.dataaccess.www.NumberConversionSoapType&amp;defaultOperationName=NumberToWords"/>
+            <setHeader headerName="Content-Type">
+               <constant>application/json</constant>
+            </setHeader>
+            <setBody>
+                <simple>${body[0]}</simple>
+            </setBody>
+        </route>
+        
+    </camelContext>
+
+</beans>
