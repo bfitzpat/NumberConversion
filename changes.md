@@ -1,6 +1,12 @@
 # list of changes made to make this work
 
-1. Package names were incorrect in generated context.xml file. It is using "com/webservicesserver.dataaccess.www." in several places although "com.dataaccess.webservicesserver." is the one that is available.
+* Created a new spring-boot project. 
+* Used wsdl2rest to create CXF and a generated camel file from the wsdl -- `http://www.dataaccess.com/webservicesserver/numberconversion.wso?WSDL`
+* wsdl2rest completed successfully without errors, but we noticed a few things that had to be corrected
+
+## corrections
+
+1. Package names were incorrect in generated context.xml file. It is using "com/webservicesserver.dataaccess.www." in several places though "com.dataaccess.webservicesserver." is the package generated in cxf.
 2. Fixing that and calling http://localhost:8081/jaxrs/numbertodollars/111 threw a fun error:
 
 `org.apache.cxf.interceptor.Fault: class java.lang.String cannot be cast to class java.math.BigDecimal (java.lang.String and java.math.BigDecimal are in module java.base of loader 'bootstrap')
